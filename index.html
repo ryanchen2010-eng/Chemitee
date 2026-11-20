@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Explore molecules, draw structures, compare supported reaction pathways, and calculate chemistry quantities." />
+    <title>Home · Molecule Playground</title>
+    <script src="/appearance-start.js"></script>
+    <link rel="stylesheet" href="/src/home.css" />
+    <link rel="stylesheet" href="/src/ui-system.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to workspace</a>
+    <div class="home-shell">
+      <header class="site-header">
+        <a class="site-brand" href="/" aria-label="Molecule Playground home">
+          <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+          <span>Molecule Playground</span>
+        </a>
+        <nav class="site-nav" aria-label="Project pages">
+          <a class="is-current" href="/" aria-current="page">Home</a>
+          <a href="/explore.html">Explore</a>
+          <a href="/builder.html">Builder</a>
+          <a href="/reaction-lab.html">Reaction Lab</a>
+          <a href="/calculators.html">Calculators</a>
+        </nav>
+      </header>
+
+      <main id="main-content" tabindex="-1">
+        <section class="home-hero" aria-labelledby="home-title">
+          <div class="hero-content">
+            <h1 id="home-title">Explore chemistry in 3D</h1>
+            <p class="hero-intro">Find a molecule, draw your own structure, or follow what changes in a reaction.</p>
+            <div class="hero-actions">
+              <a class="action action-primary" href="/explore.html">Explore molecules <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></a>
+              <a class="action action-secondary" href="/reaction-lab.html">Open Reaction Lab</a>
+            </div>
+          </div>
+
+          <div class="home-specimen">
+            <figure class="molecule-figure">
+              <a class="figure-topline" href="/explore.html"><span>Explorer</span><span>Open viewer</span></a>
+              <figcaption><div><strong>Water</strong><small>Reference-based geometry</small></div><span class="figure-formula">H₂O</span></figcaption>
+              <div class="water-stage">
+                <img src="/molecules/water-home.png" width="270" height="189" fetchpriority="high" draggable="false" alt="Ball-and-stick water model with one red oxygen atom and two white hydrogen atoms">
+              </div>
+              <dl class="molecule-key">
+                <div><dt>Shape</dt><dd>Bent</dd></div>
+                <div><dt>Bond angle</dt><dd>104.5°</dd></div>
+                <div><dt>O–H bonds</dt><dd>2</dd></div>
+              </dl>
+            </figure>
+          </div>
+        </section>
+
+        <section class="tool-section" aria-labelledby="tools-title">
+          <div class="section-intro">
+            <h2 id="tools-title">Choose a chemistry tool</h2>
+          </div>
+          <div class="tool-grid">
+            <article class="tool-card">
+              <div class="tool-symbol" aria-hidden="true">⌕</div>
+              <h3>Explore Molecules</h3>
+              <p>Search compounds and view their shapes and properties.</p>
+              <a href="/explore.html" aria-label="Open Explore Molecules">Open Explorer <span aria-hidden="true">→</span></a>
+            </article>
+            <article class="tool-card">
+              <div class="tool-symbol tool-symbol-builder" aria-hidden="true">⌬</div>
+              <h3>Build a Molecule</h3>
+              <p>Draw a structure and turn it into 3D when possible.</p>
+              <a href="/builder.html" aria-label="Open Molecule Builder">Open Builder <span aria-hidden="true">→</span></a>
+            </article>
+            <article class="tool-card">
+              <div class="tool-symbol tool-symbol-lab" aria-hidden="true">⇄</div>
+              <h3>Try a Reaction</h3>
+              <p>Choose two reactants and explore supported pathways.</p>
+              <a href="/reaction-lab.html" aria-label="Open Reaction Lab">Open Reaction Lab <span aria-hidden="true">→</span></a>
+            </article>
+            <article class="tool-card">
+              <div class="tool-symbol tool-symbol-calculator" aria-hidden="true">±</div>
+              <h3>Chemistry Calculators</h3>
+              <p>Calculate solutions, reaction amounts, equilibrium, and more.</p>
+              <a href="/calculators.html" aria-label="Open Chemistry Calculators">Open Calculators <span aria-hidden="true">→</span></a>
+            </article>
+          </div>
+        </section>
+
+        <section class="scope-panel" aria-labelledby="scope-title">
+          <div>
+            <h2 id="scope-title">What the models can show</h2>
+          </div>
+          <div class="scope-copy">
+            <p>3D shapes are models. Some compounds are shown in 2D only.</p>
+            <p>Reaction Lab covers selected pathways. No match does not mean no reaction.</p>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">Molecule Playground</footer>
+    </div>
+    <script type="module" src="/src/home.ts"></script>
+  </body>
+</html>

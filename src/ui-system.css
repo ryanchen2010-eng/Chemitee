@@ -1,0 +1,425 @@
+/* Studio Notebook. Paper for 2D drawings stays light for chemical marks. */
+@font-face {
+  font-family: "Mona Sans";
+  src: url("/fonts/mona-sans.woff2") format("woff2");
+  font-weight: 400 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Geist Mono";
+  src: url("/fonts/geist-mono.woff2") format("woff2");
+  font-weight: 400 500;
+  font-display: swap;
+}
+:root {
+  --ui-bg: #f7f7f5;
+  --ui-surface: #ffffff;
+  --ui-subtle: #f1efed;
+  --ui-text: #211c20;
+  --ui-muted: #5c545a;
+  --ui-brand: #a01354;
+  --ui-brand-soft: #f8e6ef;
+  --ui-action: #ba0e61;
+  --ui-action-hover: #a30852;
+  --ui-on-action: #ffffff;
+  --ui-selected: #ebe9e6;
+  --ui-border: #dad5d6;
+  --ui-control-border: #82747a;
+  --ui-focus: #a01354;
+  --ui-warning: #744809;
+  --ui-warning-bg: #fff7e8;
+  --ui-warning-border: #c19761;
+  --ui-danger: #a82e43;
+  --ui-danger-bg: #fff0f2;
+  --ui-success: #246b49;
+  --ui-success-bg: #e7f3eb;
+  --ui-info: #674585;
+  --ui-info-bg: #f3edf9;
+  --ui-info-border: #c8b7dc;
+  --ui-specimen: #f2dee5;
+  --ui-specimen-ring: #e5bccd;
+  --ui-drawing-paper: #f7f7f5;
+  --ui-drawing-muted: #5c545a;
+  --ui-viewer-bg: var(--ui-subtle);
+  --ui-scrim: rgb(29 19 26 / 55%);
+  --ui-shadow-ink: rgb(43 27 36 / 12%);
+  --ui-radius: 12px;
+  --ui-control-radius: 8px;
+  --ui-shadow: 0 10px 25px var(--ui-shadow-ink);
+  --ui-space-1: 4px;
+  --ui-space-2: 8px;
+  --ui-space-3: 12px;
+  --ui-space-4: 16px;
+  --ui-space-6: 24px;
+  --ui-space-8: 32px;
+  --ui-font: "Mona Sans", ui-sans-serif, system-ui, sans-serif;
+  --ui-data-font: "Geist Mono", ui-monospace, monospace;
+  color: var(--ui-text);
+  background: var(--ui-bg);
+  font-family: var(--ui-font);
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  --ui-bg: #0c0e12;
+  --ui-surface: #191a20;
+  --ui-subtle: #22232a;
+  --ui-text: #f4eef1;
+  --ui-muted: #c8bac3;
+  --ui-brand: #f7a9d0;
+  --ui-brand-soft: #39233a;
+  --ui-action: #bd246d;
+  --ui-action-hover: #a9185e;
+  --ui-selected: #282933;
+  --ui-border: #3c3944;
+  --ui-control-border: #8d8090;
+  --ui-focus: #f7a9d0;
+  --ui-warning: #f2d092;
+  --ui-warning-bg: #382e21;
+  --ui-warning-border: #a88353;
+  --ui-danger: #ffafbd;
+  --ui-danger-bg: #3e262e;
+  --ui-success: #a1e2bd;
+  --ui-success-bg: #24362e;
+  --ui-info: #e0c5fa;
+  --ui-info-bg: #31263d;
+  --ui-info-border: #766382;
+  --ui-specimen: #23202d;
+  --ui-specimen-ring: #49384b;
+  --ui-star: rgb(228 234 255 / 32%);
+  --ui-star-muted: rgb(190 202 243 / 19%);
+  --ui-scrim: rgb(3 4 8 / 74%);
+  --ui-shadow-ink: rgb(0 0 0 / 35%);
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--ui-bg); line-height: 1.55; }
+[hidden] { display: none !important; }
+::selection { background: var(--ui-brand-soft); color: var(--ui-text); }
+.chemical-formula-count { display: inline-block; white-space: nowrap; }
+.chemical-formula-count sub {
+  position: relative;
+  bottom: -.24em;
+  vertical-align: baseline;
+  font: inherit;
+  font-size: .72em;
+  line-height: 0;
+  letter-spacing: normal;
+}
+:is(.home-shell, .shell, .lab-shell, .builder-shell, .calculator-shell) {
+  padding: 24px 32px 40px;
+}
+:is(.site-header, .hero, .lab-header, .builder-header) {
+  align-items: center;
+  gap: 24px;
+  padding: 8px 0 24px;
+}
+:is(.hero, .lab-header, .builder-header) h1,
+.calculator-intro h1 {
+  max-width: 100%;
+  margin-bottom: 8px;
+  font-family: var(--ui-font);
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  font-weight: 650;
+  letter-spacing: -.045em;
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+:is(.hero, .lab-header, .builder-header) > div:first-child { min-width: 0; }
+.hero-mark { display: none; }
+.eyebrow { color: var(--ui-muted); font-size: .8125rem; letter-spacing: normal; text-transform: none; line-height: 1.5; }
+:is(.hero-copy, .lab-copy, .builder-copy, .hero-intro) { color: var(--ui-muted); line-height: 1.6; }
+.site-brand { font-family: var(--ui-font); font-size: 1.1rem; letter-spacing: -.035em; }
+:is(.site-nav, .hero-nav, .lab-nav, .builder-nav) {
+  align-self: center;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+:is(.site-nav, .hero-nav, .lab-nav, .builder-nav) a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  margin: 0;
+  padding: 10px 13px;
+  border: 1px solid transparent;
+  border-radius: var(--ui-control-radius);
+  color: var(--ui-muted);
+  background: transparent;
+  font-size: .875rem;
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+:is(.site-nav, .hero-nav, .lab-nav, .builder-nav) a:hover { background: var(--ui-brand-soft); color: var(--ui-text); }
+:is(.site-nav, .hero-nav, .lab-nav, .builder-nav) a[aria-current="page"] {
+  border-color: var(--ui-action);
+  color: var(--ui-on-action);
+  background: var(--ui-action);
+}
+.skip-link {
+  position: fixed;
+  z-index: 1000;
+  top: 8px;
+  left: 16px;
+  padding: 12px 18px;
+  border-radius: 8px;
+  color: var(--ui-on-action);
+  background: var(--ui-action);
+  transform: translateY(-160%);
+}
+.skip-link:focus { transform: none; }
+body :where(button, a, input, select, textarea, summary, [tabindex]):not(:where(.ketcher-frame *)):focus-visible {
+  outline: 3px solid var(--ui-focus);
+  outline-offset: 3px;
+}
+:is(.home-shell, .shell, .lab-shell, .builder-shell, .calculator-shell)
+  :where(button, a, input, select, summary, [tabindex]):not(:where(.ketcher-frame *)):focus-visible {
+  outline: 3px solid var(--ui-focus);
+  outline-offset: 3px;
+  scroll-margin-block: 24px;
+}
+:is(.home-shell, .shell, .lab-shell, .builder-shell, .calculator-shell)
+  :where(button, select, summary):not(:where(.ketcher-frame *)) { touch-action: manipulation; }
+:is(.shell, .lab-shell, .builder-shell, .calculator-shell)
+  :where(button, select, input:not([type="checkbox"]):not([type="radio"])):not(:where(.ketcher-frame *)) {
+  min-height: 44px;
+  border-radius: var(--ui-control-radius);
+  font-family: var(--ui-font);
+}
+body :is(.home-shell, .shell, .lab-shell, .builder-shell, .calculator-shell)
+  summary:not(:where(.ketcher-frame *)) { min-height: 44px; padding-block: 10px; }
+body :is(.shell, .lab-shell, .builder-shell, .calculator-shell)
+  :where(input:not([type="checkbox"]):not([type="radio"]), select):not(:where(.ketcher-frame *)) {
+  border-color: var(--ui-control-border);
+  font-size: .9375rem;
+}
+body :where(input, textarea):not(:where(.ketcher-frame *))::placeholder { color: var(--ui-muted); opacity: 1; }
+:is(.home-shell, .shell, .lab-shell, .builder-shell, .calculator-shell)
+  :where(button, a):not(:where(.ketcher-frame *)) { transition: background-color 120ms ease, border-color 120ms ease; }
+:is(.shell, .lab-shell, .builder-shell, .calculator-shell)
+  :where(button:not(:disabled)):not(:where(.ketcher-frame *)):hover { border-color: var(--ui-brand); }
+:is(.shell, .lab-shell, .builder-shell, .calculator-shell)
+  :where(button:disabled):not(:where(.ketcher-frame *)) { cursor: not-allowed; }
+.workspace-shell :is(.primary-button, .molecule-search button, .calculator-workspace button[type="submit"]):hover:not(:disabled) {
+  background: var(--ui-action-hover);
+  color: var(--ui-on-action);
+}
+:is(.workspace, .lab-workspace, .builder-workspace, .calculator-workspace) {
+  border-color: var(--ui-border);
+  border-radius: var(--ui-radius);
+  background: var(--ui-surface);
+  box-shadow: var(--ui-shadow);
+  backdrop-filter: none;
+}
+:is(.panel-heading, .section-heading, .viewer-toolbar, .calculator-heading) h2 {
+  font-family: var(--ui-font);
+  font-size: clamp(1.25rem, 2vw, 1.65rem);
+  font-weight: 650;
+  letter-spacing: -.03em;
+  line-height: 1.25;
+}
+:is(.library, .lab-result-panel, .preview-panel) { background: var(--ui-subtle); border-color: var(--ui-border); }
+:is(.lab-input-panel, .lab-result-panel) { padding: 24px; }
+:is(.reactant-fields, .condition-fields, .calculator-workspace, .solution-calculator, .calculator-field) label {
+  color: var(--ui-text);
+  font-size: .8125rem;
+  line-height: 1.5;
+}
+:is(.field-help, .reactant-lookup-status, .calculator-caption, .calculator-notes p,
+  .calculator-assumptions p, .calc-note, .measurement-help, .measurement-note,
+  .viewer-hint, .preview-hint, .diagram-note, .lab-limits, .insight-note) {
+  color: var(--ui-muted);
+  font-size: .8125rem;
+  line-height: 1.6;
+}
+:is(.reaction-calculator, .solution-calculator, .bond-measurements, .functional-group-panel,
+  .reaction-mechanism, .pathway-reasoning, .pathway-comparison) { border-color: var(--ui-border); border-radius: 12px; }
+:is(.reaction-calculator, .solution-calculator, .bond-measurements, .functional-group-panel,
+  .reaction-mechanism, .pathway-reasoning, .pathway-comparison) > summary { min-height: 44px; font-size: .875rem; }
+:is(.calc-result, .calculator-output, .solution-results, .measurement-value, .result-facts, .builder-facts) {
+  font-variant-numeric: tabular-nums;
+}
+:is(.calc-error, .calculator-error, .solution-error, #lab-status.is-error, #builder-status.is-error) {
+  color: var(--ui-danger);
+  font-size: .875rem;
+}
+.calc-error:not([hidden]):not(:empty), .calculator-error:not([hidden]):not(:empty) {
+  padding: 10px 12px;
+  border-left: 3px solid var(--ui-danger);
+  background: var(--ui-danger-bg);
+}
+.viewer-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin: 12px 0;
+}
+.viewer-controls[hidden] { display: none; }
+.viewer-controls button {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--ui-control-border);
+  border-radius: var(--ui-control-radius);
+  color: var(--ui-brand);
+  background: var(--ui-surface);
+  font: 600 .8125rem var(--ui-font);
+  cursor: pointer;
+}
+.viewer-controls button:hover { background: var(--ui-brand-soft); }
+.viewer-controls button:disabled { opacity: .5; }
+.viewer-controls button svg { display: block; width: 18px; height: 18px; }
+.copy-result { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.copy-result span { color: var(--ui-muted); font-size: .8125rem; }
+.copy-result button {
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--ui-control-border);
+  border-radius: var(--ui-control-radius);
+  background: var(--ui-surface);
+  color: var(--ui-brand);
+  font: 600 .8125rem var(--ui-font);
+  cursor: pointer;
+}
+.copy-result button:disabled { opacity: .55; }
+.copy-result button:hover:not(:disabled) { background: var(--ui-brand-soft); }
+.reaction-previews.is-comparing > .viewer-controls { grid-column: 2; margin: 0; }
+.viewer-panel > .viewer-controls { margin-inline: 30px; }
+:is(.reaction-viewer, .builder-viewer, .viewer-stage) { border: 1px solid var(--ui-border); border-radius: 12px; }
+.reaction-viewer { height: 410px; }
+.reaction-diagram { min-height: 410px; border-radius: 12px; background: var(--ui-drawing-paper); }
+.viewer-status { max-width: calc(100% - 32px); border-radius: 8px; box-shadow: none; }
+.viewer-stage .viewer-hint { max-width: calc(100% - 28px); border: 1px solid var(--ui-border); backdrop-filter: none; }
+
+/* Reaction Lab retains the existing two-panel workflow and every confidence gate. */
+.lab-notice { border-color: var(--ui-border); color: var(--ui-muted); background: var(--ui-surface); font-size: .8125rem; }
+.reaction-guide { background: var(--ui-surface); border-color: var(--ui-border); }
+.reaction-guide > summary { min-height: 44px; font-size: .875rem; }
+.lab-flow { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; margin: 4px 0 16px; padding: 0; list-style: none; }
+.lab-flow a { display: flex; gap: 7px; min-height: 44px; align-items: center; color: var(--ui-muted); font-size: .875rem; font-weight: 600; border-bottom: 2px solid var(--ui-border); text-decoration: none; }
+.lab-flow a:hover { color: var(--ui-text); }
+.lab-flow span { display: grid; place-items: center; flex: none; width: 23px; height: 23px; border-radius: 50%; color: var(--ui-muted); background: var(--ui-subtle); font-size: .75rem; }
+.lab-flow a[aria-current="step"] { border-color: var(--ui-action); color: var(--ui-text); }
+.lab-flow a[aria-current="step"] span { background: var(--ui-action); color: var(--ui-on-action); }
+.panel-heading { margin-bottom: 20px; }
+.condition-group { min-width: 0; margin: 20px 0; padding: 16px; border: 1px solid var(--ui-border); border-radius: 12px; background: var(--ui-subtle); }
+.condition-group legend { padding: 0 6px; font-size: .875rem; font-weight: 650; }
+.condition-group .condition-fields { margin-bottom: 0; gap: 12px; }
+.reactant-lookup button { font-size: .8125rem; border-color: var(--ui-control-border); }
+.example-library { background: var(--ui-subtle); border-color: var(--ui-border); }
+.example-cards { max-height: 280px; }
+.example-card { border-radius: 8px; box-shadow: none; }
+.example-card strong { font-size: .875rem; }
+.library-heading h3 { font-family: var(--ui-font); font-size: 1.1rem; font-weight: 650; }
+.example-card .example-pair { color: var(--ui-muted); font-size: .8125rem; }
+.family-filters button { font-size: .8125rem; border-radius: 8px; }
+.reaction-heading { padding-top: 24px; border-top: 1px solid var(--ui-border); }
+.reaction-option { gap: 8px; padding: 16px; border-color: var(--ui-control-border); border-radius: 12px; }
+.reaction-option strong { font-size: 1rem; }
+.reaction-option span { color: var(--ui-text); font-size: .875rem; }
+.reaction-option small { color: var(--ui-muted); font-size: .8125rem; }
+.reaction-option em { width: fit-content; padding: 4px 8px; border-radius: 6px; background: var(--ui-subtle); font-size: .8125rem; }
+.reaction-option[data-preview="conditional"][aria-pressed="true"] { border-color: var(--ui-warning-border); background: var(--ui-warning-bg); box-shadow: inset 0 0 0 1px var(--ui-shadow-ink); }
+.reaction-option[data-preview="conditional"] em { color: var(--ui-warning); background: var(--ui-warning-bg); }
+.condition-assessment { padding: 12px 14px; border: 1px solid var(--ui-border); border-radius: 8px; background: var(--ui-surface); font-size: .875rem; font-weight: 600; }
+.assessment-incomplete, .assessment-alternative { color: var(--ui-warning); }
+.condition-assessment:is(.assessment-incomplete, .assessment-alternative) { border-color: var(--ui-warning-border); background: var(--ui-warning-bg); }
+.reaction-equation { padding: 16px; border-color: var(--ui-border); background: var(--ui-surface); color: var(--ui-text); font-size: .9375rem; font-weight: 600; overflow-wrap: anywhere; }
+.empty-options { border-color: var(--ui-control-border); color: var(--ui-muted); background: var(--ui-subtle); font-size: .875rem; }
+.lab-actions { flex-wrap: wrap; }
+.lab-actions p { color: var(--ui-muted); font-size: .875rem; }
+.preview-switch { gap: 4px; background: var(--ui-surface); border-color: var(--ui-border); }
+.preview-switch button { font-size: .8125rem; }
+.bond-legend li { color: var(--ui-muted); font-size: .8125rem; }
+.atom-inspection p { font-size: .8125rem; }
+.mechanism-navigation button, .mechanism-step-buttons button { min-height: 44px; font-size: .8125rem; }
+.guided-conditions { border-color: var(--ui-warning-border); border-left: 3px solid var(--ui-warning-border); background: var(--ui-warning-bg); border-radius: 12px; }
+.guided-conditions h3 { font-size: .9375rem; }
+.guided-conditions p, .guided-conditions li { font-size: .8125rem; line-height: 1.6; color: var(--ui-warning); }
+.guided-conditions > strong { font-size: .875rem; color: var(--ui-text); }
+.guided-conditions details { padding-top: 12px; border-top: 1px solid var(--ui-warning-border); }
+.guided-conditions summary { min-height: 44px; font-size: .875rem; }
+.guided-replacement-confirmation { gap: 10px; min-height: 44px; align-items: start; }
+
+.site-footer, .calculator-footer { color: var(--ui-muted); font-size: .8125rem; }
+.molecule-card:hover { transform: none; }
+.molecule-card.is-active { box-shadow: none; border-color: var(--ui-brand); background: var(--ui-surface); }
+.molecule-card__formula { font-family: var(--ui-font); font-size: .875rem; border-radius: 10px; }
+.molecule-card:nth-child(n) .molecule-card__formula { color: var(--ui-brand); background: var(--ui-brand-soft); }
+.molecule-card__text small, .molecule-search p { color: var(--ui-muted); font-size: .8125rem; }
+.molecule-search label { color: var(--ui-text); font-size: .8125rem; }
+.molecule-information h3 { font-family: var(--ui-font); font-size: 1.1rem; font-weight: 650; }
+.molecule-information__grid dt { color: var(--ui-muted); font-size: .75rem; letter-spacing: .035em; }
+.molecule-information__grid dd { font-size: .9375rem; }
+.result-facts span, .builder-facts > div > span,
+.molecule-information__legend, .molecule-information__sources,
+.molecule-information__disclaimer, .molecule-figure figcaption small,
+.calculator-workspace small {
+  color: var(--ui-muted);
+  font-size: .75rem;
+  line-height: 1.6;
+}
+.ketcher-frame { border-color: var(--ui-control-border); border-radius: 12px; }
+.ketcher-frame { color-scheme: light; }
+.editor-actions p { font-size: .875rem; }
+.calculator-intro { padding: 16px 0 28px; }
+.calculator-menu { border: 1px solid var(--ui-border); border-radius: 12px; padding: 8px; background: var(--ui-surface); }
+#calculator-topics button { border-radius: 8px; font-size: .875rem; }
+.calculator-workspace { border-radius: var(--ui-radius); }
+.calculator-context { background: var(--ui-subtle); border-color: var(--ui-border); }
+.calculator-workspace .calc-note { color: var(--ui-muted); font-size: .875rem; }
+.calc-result { border-color: var(--ui-brand); border-left-width: 3px; background: var(--ui-brand-soft); font-size: .9375rem; }
+
+@media (max-width: 1100px) {
+  :is(.site-header, .hero, .lab-header, .builder-header) { flex-direction: column; align-items: flex-start; gap: 16px; }
+  :is(.site-nav, .hero-nav, .lab-nav, .builder-nav) { align-self: flex-start; justify-content: flex-start; }
+}
+@media (max-width: 700px) {
+  :is(.home-shell, .shell, .lab-shell, .builder-shell, .calculator-shell) { padding: 16px 12px 32px; }
+  :is(.site-nav, .hero-nav, .lab-nav, .builder-nav) { display: flex; flex-wrap: wrap; width: 100%; gap: 8px; }
+  :is(.site-nav, .hero-nav, .lab-nav, .builder-nav) a { padding: 10px 12px; }
+  :is(.lab-input-panel, .lab-result-panel) { padding: 18px 16px; }
+  .condition-group { padding: 12px; }
+  .condition-group .condition-fields { grid-template-columns: 1fr; }
+  .reaction-previews.is-comparing { grid-template-columns: 1fr; }
+  .reaction-previews.is-comparing > .viewer-controls { grid-column: 1; }
+  .reaction-viewer, .reaction-previews.is-comparing .reaction-viewer { height: 330px; }
+  .reaction-diagram { min-height: 330px; }
+  .lab-flow { gap: 8px; }
+  .preview-toolbar { align-items: flex-start; }
+  .preview-switch { flex-wrap: wrap; }
+  body :is(.shell, .lab-shell, .builder-shell, .calculator-shell)
+    :where(input:not([type="checkbox"]):not([type="radio"]), select):not(:where(.ketcher-frame *)) { font-size: 1rem; }
+  .viewer-panel > .viewer-controls { margin-inline: 18px; }
+  .calculator-menu { position: static; }
+  .viewer-controls { gap: 8px; }
+}
+/* Short, non-blocking feedback; scientific canvases and Ketcher stay untouched. */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes workspace-reveal { from { opacity: .45; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes builder-loading { 50% { opacity: .7; } }
+  #builder-status.is-loading { animation: builder-loading 1.4s ease-in-out infinite; }
+  #builder-status.is-ready { animation: workspace-reveal 420ms ease-out; }
+  .home-hero { animation: workspace-reveal 420ms ease-out both; }
+  :is(.workspace-shell, .lab-research) :where(button, a, summary):not(:where(.ketcher-frame *)) {
+    transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
+  }
+  :is(.molecule-card, .reaction-option, .preview-switch button, #calculator-topics button) {
+    transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+  }
+  :is(.calc-result, .solution-output, .calculator-output, .structure-provenance):not([hidden]) {
+    animation: workspace-reveal 340ms ease-out;
+  }
+  /* These nodes are recreated when the corresponding information or step changes. */
+  :is(.molecule-information, .mechanism-content, .calc-result, .solution-output, .calculator-output) > :is(p, h3, .mechanism-roles, .solution-fact, .calculator-fact) {
+    animation: workspace-reveal 340ms ease-out;
+  }
+  .mechanism-step-buttons button[aria-pressed="true"] { transition: background-color 150ms ease, border-color 150ms ease; }
+}
+@media (prefers-reduced-motion: reduce) {
+  :is(.home-shell, .shell, .lab-shell, .builder-shell, .calculator-shell)
+    :where(*):not(:where(.ketcher-frame *)) { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

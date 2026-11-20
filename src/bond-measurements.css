@@ -1,0 +1,22 @@
+.bond-measurements { margin: 12px 0; border: 1px solid var(--ui-border); border-radius: var(--ui-radius); color: var(--ui-text); background: var(--ui-subtle); font-family: var(--ui-font); }
+.bond-measurements[hidden] { display: none; }
+.bond-measurements > details > summary { min-height: 44px; padding: 12px 14px; font-size: .875rem; font-weight: 700; cursor: pointer; }
+.measurement-body { padding: 0 14px 14px; }
+.measurement-controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.measurement-controls :is(select, button), .measurement-atom-buttons button, .bond-measurements fieldset select { min-height: 44px; padding: 8px 12px; border: 1px solid var(--ui-control-border); border-radius: var(--ui-control-radius); color: var(--ui-text); background: var(--ui-surface); font: inherit; font-size: .8125rem; }
+.measurement-controls select { min-width: 0; max-width: 100%; flex: 1 1 13rem; }
+.bond-measurements fieldset { min-inline-size: 0; margin: 12px 0; padding: 8px 12px; border: 1px solid var(--ui-border); border-radius: var(--ui-control-radius); font-size: .8125rem; }
+.bond-measurements fieldset label { display: inline-flex; align-items: center; gap: 5px; margin: 4px 12px 4px 0; }
+.bond-measurements button { cursor: pointer; }
+.bond-measurements button:disabled { opacity: .55; cursor: default; }
+.bond-measurements button:hover:not(:disabled) { background: var(--ui-brand-soft); }
+.measurement-status { margin: 10px 0; font-size: .8125rem; line-height: 1.5; overflow-wrap: anywhere; }
+.measurement-order { display: flex; flex-wrap: wrap; gap: 8px 25px; margin: 8px 0; padding-left: 22px; font-size: .75rem; font-weight: 700; }
+.measurement-order[hidden], .measurement-value[hidden] { display: none; }
+.measurement-value { display: block; width: fit-content; margin: 10px 0; padding: 8px 13px; border-radius: var(--ui-control-radius); color: var(--ui-brand); background: var(--ui-brand-soft); font: 500 1.15rem var(--ui-data-font); }
+.measurement-note { margin: 10px 0; color: var(--ui-muted); font-size: .8125rem; line-height: 1.5; }
+.measurement-atoms > summary { width: fit-content; min-height: 44px; padding-block: 11px; font-size: .8125rem; font-weight: 650; cursor: pointer; }
+.measurement-atom-buttons { display: flex; flex-wrap: wrap; gap: 6px; max-height: 180px; overflow: auto; padding: 6px; }
+.measurement-atom-buttons button { min-width: 44px; }
+.measurement-atom-buttons button[aria-pressed="true"] { border-color: var(--ui-brand); color: var(--ui-brand); background: var(--ui-brand-soft); }
+.bond-measurements button:focus-visible, .bond-measurements select:focus-visible, .bond-measurements summary:focus-visible { outline: 3px solid var(--ui-focus); outline-offset: 2px; }

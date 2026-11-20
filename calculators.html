@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Local chemistry calculators for moles, solutions, reaction amounts, equilibrium, pH and solubility." />
+    <title>Calculators · Molecule Playground</title>
+    <script src="/appearance-start.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to workspace</a>
+    <div class="calculator-shell">
+      <header class="site-header">
+        <a class="site-brand" href="/">Molecule Playground</a>
+        <nav class="site-nav" aria-label="Project pages">
+          <a href="/">Home</a>
+          <a href="/explore.html">Explore</a>
+          <a href="/builder.html">Builder</a>
+          <a href="/reaction-lab.html">Reaction Lab</a>
+          <a class="is-current" href="/calculators.html" aria-current="page">Calculators</a>
+        </nav>
+      </header>
+      <main id="main-content" tabindex="-1">
+        <div class="calculator-intro">
+          <h1>Calculators</h1>
+        </div>
+        <section id="calculator-home" aria-labelledby="calculator-home-title">
+          <h2 id="calculator-home-title" tabindex="-1">Choose a calculator</h2>
+          <div id="calculator-choices" class="calculator-choices">
+            <section class="calculator-topic-group" aria-labelledby="amount-topics-title">
+              <h3 id="amount-topics-title">Amounts and gases</h3>
+              <div id="calculator-amount-topics"></div>
+            </section>
+            <section class="calculator-topic-group" aria-labelledby="model-topics-title">
+              <h3 id="model-topics-title">Chemical models</h3>
+              <div id="calculator-model-topics"></div>
+            </section>
+          </div>
+        </section>
+        <div class="calculator-layout" id="calculator-layout" hidden>
+          <aside class="calculator-menu">
+            <label class="mobile-topic-label" for="calculator-topic">Calculator topic</label>
+            <select id="calculator-topic" aria-controls="calculator-workspace"></select>
+            <nav id="calculator-topics" aria-label="Calculator topics"></nav>
+            <p class="calc-note menu-note">Arithmetic stays in your browser. Reaction choices use the chemistry service.</p>
+          </aside>
+          <section id="calculator-workspace" class="calculator-workspace" aria-labelledby="calculator-title">
+            <button id="calculator-back" type="button" class="calculator-back">← All calculator topics</button>
+            <div class="calculator-heading">
+              <h2 id="calculator-title" tabindex="-1"></h2>
+              <p id="calculator-description" class="calc-note"></p>
+              <p id="calculator-model" class="calculator-model"></p>
+            </div>
+            <div id="calculator-context" class="calculator-context">
+              <label for="calculator-compound">Compound (optional)</label>
+              <select id="calculator-compound"></select>
+              <p id="calculator-compound-notice" class="calc-note" role="status"></p>
+            </div>
+            <div id="calculator-panels"></div>
+          </section>
+        </div>
+      </main>
+      <footer class="calculator-footer">Defined calculation models · not reaction-speed, experimental-accuracy or safety predictions</footer>
+    </div>
+    <script type="module" src="/src/calculators.ts"></script>
+  </body>
+</html>

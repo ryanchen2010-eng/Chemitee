@@ -1,0 +1,39 @@
+.solution-calculator { margin: 16px 0; border: 1px solid var(--ui-border); border-radius: 14px; background: var(--ui-subtle); color: var(--ui-text); font-family: var(--ui-font); }
+.solution-calculator > summary { padding: 14px 16px; cursor: pointer; font-size: .87rem; font-weight: 750; }
+.solution-body { padding: 0 16px 16px; min-width: 0; }
+.solution-context { margin: 0 0 12px; color: var(--ui-muted); font-size: .8rem; overflow-wrap: anywhere; }
+.solution-modes { display: flex; flex-wrap: wrap; gap: 6px; }
+.solution-modes button { border: 1px solid var(--ui-border); padding: 8px 11px; border-radius: 8px; color: var(--ui-muted); background: var(--ui-surface); font: inherit; font-size: .74rem; cursor: pointer; }
+.solution-modes button[aria-pressed="true"] { background: var(--ui-action); border-color: var(--ui-action); color: var(--ui-on-action); }
+.solution-caption { font-size: .73rem; line-height: 1.5; color: var(--ui-muted); margin: 10px 0; }
+.solution-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 16px 0; }
+.solution-field { min-width: 0; }
+.solution-field[hidden], .solution-output[hidden], .solution-error[hidden] { display: none; }
+.solution-field label { display: block; margin-bottom: 6px; font-size: .76rem; font-weight: 700; }
+.solution-quantity { display: flex; gap: 6px; min-width: 0; }
+.solution-quantity input, .solution-quantity select { border: 1px solid var(--ui-control-border); border-radius: 8px; padding: 10px 9px; background: var(--ui-surface); color: var(--ui-text); font: inherit; font-size: .8rem; min-width: 0; }
+.solution-quantity input { width: 100%; flex: 1; }
+.solution-quantity select { width: auto; max-width: 105px; flex: 0 0 auto; }
+.solution-field small { display: block; margin-top: 6px; font-size: .67rem; line-height: 1.4; color: var(--ui-muted); }
+.solution-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.solution-actions button { padding: 10px 14px; border-radius: 8px; border: 1px solid var(--ui-border); font: inherit; font-size: .77rem; cursor: pointer; }
+.solution-submit { background: var(--ui-action); color: var(--ui-on-action); }
+.solution-clear { background: var(--ui-surface); color: var(--ui-muted); }
+.solution-error { margin: 12px 0; color: var(--ui-danger); font-size: .78rem; line-height: 1.5; }
+.solution-output { margin: 16px 0 10px; padding: 12px; border-radius: 10px; border: 1px solid var(--ui-border); background: var(--ui-surface); }
+.solution-fact { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 14px; padding: 7px 0; overflow-wrap: anywhere; }
+.solution-fact span { font-size: .74rem; color: var(--ui-muted); }
+.solution-fact strong { font-size: .9rem; }
+.solution-assumptions { border-top: 1px solid var(--ui-border); margin-top: 14px; padding-top: 10px; }
+.solution-assumptions > summary { font-size: .73rem; font-weight: 650; cursor: pointer; }
+.solution-assumptions p, .solution-assumptions a { font-size: .7rem; line-height: 1.55; color: var(--ui-muted); }
+.solution-assumptions a { color: var(--ui-brand); }
+.solution-calculator input:focus-visible, .solution-calculator select:focus-visible, .solution-calculator button:focus-visible, .solution-calculator summary:focus-visible { outline: 3px solid var(--ui-focus); outline-offset: 2px; }
+.solution-context-control { margin: 12px 0 0; display: flex; align-items: center; flex-wrap: wrap; gap: 8px; font-size: .76rem; }
+.solution-context-control select { padding: 8px; border: 1px solid var(--ui-control-border); border-radius: 8px; background: var(--ui-surface); color: var(--ui-muted); font: inherit; min-width: 0; max-width: 100%; }
+.solution-context-control select:focus-visible { outline: 3px solid var(--ui-focus); outline-offset: 2px; }
+@media (max-width: 600px) {
+  .solution-body { padding: 0 12px 12px; }
+  .solution-fields { grid-template-columns: minmax(0, 1fr); }
+  .solution-quantity select { max-width: 94px; }
+}

@@ -1,0 +1,21 @@
+.feedback-dialog { box-sizing: border-box; width: min(560px, calc(100% - 24px)); max-height: calc(100dvh - 32px); overflow-y: auto; border: 1px solid var(--ui-border); border-radius: 16px; padding: 24px; color: var(--ui-text); background: var(--ui-surface); font: 16px/1.5 var(--ui-font); }
+.feedback-dialog::backdrop { background: var(--ui-scrim); }
+.feedback-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.feedback-heading h2 { font: 700 1.5rem/1.25 var(--ui-font); margin: 0; }
+.feedback-form > label, .feedback-context > label { display: block; margin: 16px 0 6px; font-weight: 650; }
+.feedback-form :is(select, textarea) { box-sizing: border-box; display: block; width: 100%; padding: 10px 12px; border: 1px solid var(--ui-control-border); border-radius: 8px; font: inherit; color: inherit; background: var(--ui-surface); }
+.feedback-form textarea { resize: vertical; }
+.feedback-form small, .feedback-privacy, .feedback-context-preview { display: block; font-size: .83rem; color: var(--ui-muted); margin-top: 8px; }
+.feedback-form .feedback-consent { display: flex; align-items: center; gap: 10px; min-height: 44px; }
+.feedback-context { background: var(--ui-subtle); padding: 12px; border-radius: 8px; }
+.feedback-context[hidden] { display: none; }
+.feedback-dialog button { min-height: 44px; padding: 10px 16px; border: 1px solid var(--ui-control-border); border-radius: 8px; background: var(--ui-surface); color: var(--ui-text); font: inherit; cursor: pointer; }
+.feedback-dialog .feedback-submit { border-color: var(--ui-action); background: var(--ui-action); color: var(--ui-on-action); width: 100%; }
+.feedback-dialog button:hover:not(:disabled) { background: var(--ui-subtle); }
+.feedback-dialog .feedback-submit:hover:not(:disabled) { background: var(--ui-action-hover); }
+.feedback-dialog button:disabled { opacity: .6; cursor: default; }
+.feedback-dialog :focus-visible { outline: 3px solid var(--ui-focus); outline-offset: 3px; }
+.feedback-error { color: var(--ui-danger); overflow-wrap: anywhere; }
+.feedback-status { overflow-wrap: anywhere; }
+.feedback-dialog :is(.feedback-error,.feedback-status):empty { display: none; }
+@media(max-width:500px) { .feedback-dialog { padding: 16px; } }

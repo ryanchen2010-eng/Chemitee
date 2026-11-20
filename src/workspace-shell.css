@@ -1,0 +1,283 @@
+/* Studio Notebook shell. The saved appearance changes color tokens only. */
+body.workspace-page { min-width: 0; margin: 0; background: var(--ui-bg); }
+html[data-theme="dark"] body.workspace-page {
+  background-color: var(--ui-bg);
+  background-image:
+    radial-gradient(circle at 31px 45px, var(--ui-star) .8px, transparent 1.3px),
+    radial-gradient(circle at 126px 96px, var(--ui-star-muted) 1px, transparent 1.5px),
+    radial-gradient(circle at 63px 123px, var(--ui-star-muted) .7px, transparent 1.2px),
+    radial-gradient(circle at 41px 203px, var(--ui-star) 1px, transparent 1.55px),
+    radial-gradient(circle at 171px 82px, var(--ui-star-muted) .8px, transparent 1.25px);
+  background-size: 173px 139px, 269px 197px, 193px 283px, 317px 241px, 337px 307px;
+}
+body .workspace-shell {
+  --shell-gutter: clamp(20px, 4.6vw, 74px);
+  width: min(1440px, 100%);
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 0 var(--shell-gutter) 32px;
+  color: var(--ui-text);
+  font-family: var(--ui-font);
+}
+.workspace-shell > [hidden], .workspace-shell [hidden] { display: none !important; }
+.workspace-shell :where(h1, h2, h3):not(:where(.ketcher-frame *)) { font-family: var(--ui-font); }
+.workspace-shell > :is(.hero, .builder-header, .lab-header) {
+  flex-direction: row;
+  align-items: end;
+  justify-content: space-between;
+  padding: 32px 0 24px;
+}
+.workspace-shell > :is(.hero, .builder-header, .lab-header) h1,
+.workspace-shell .calculator-intro h1 {
+  margin: 0 0 8px;
+  font-size: clamp(2.2rem, 3vw, 3.15rem);
+  font-weight: 560;
+  letter-spacing: -.045em;
+  line-height: 1.05;
+}
+.workspace-shell > :is(.hero, .builder-header, .lab-header) p { margin: 0; font-size: .975rem; color: var(--ui-muted); }
+.workspace-topbar { position: relative; z-index: 25; margin-inline: calc(-1 * var(--shell-gutter)); background: var(--ui-bg); border-bottom: 1px solid var(--ui-border); }
+.workspace-topbar-inner {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(max-content, 1fr) auto minmax(0, 1fr) auto auto;
+  gap: 12px;
+  padding-inline: var(--shell-gutter);
+  min-height: 70px;
+  align-items: center;
+}
+.workspace-brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  min-height: 44px;
+  color: var(--ui-text);
+  font-size: 1.125rem;
+  font-weight: 690;
+  letter-spacing: -.04em;
+  text-decoration: none;
+  line-height: 1.2;
+}
+.workspace-brand .workspace-icon { color: var(--ui-brand); }
+.workspace-icon, .workspace-theme svg, .workspace-support svg {
+  width: 22px;
+  height: 22px;
+  display: block;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.workspace-menu { display: contents; }
+.workspace-topbar .workspace-nav { display: flex; gap: 4px; margin: 0; width: auto; justify-content: center; }
+.workspace-topbar .workspace-nav a {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-radius: var(--ui-control-radius);
+  background: transparent;
+  color: var(--ui-muted);
+  font-size: .875rem;
+  font-weight: 560;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.workspace-topbar .workspace-nav a .workspace-icon { display: none; }
+.workspace-topbar .workspace-nav a:hover { color: var(--ui-text); background: var(--ui-subtle); }
+.workspace-topbar .workspace-nav a[aria-current="page"] { color: var(--ui-text); background: var(--ui-selected); }
+.workspace-topbar .workspace-account-menu { position: relative; justify-self: end; margin: 0; }
+.workspace-topbar .workspace-menu-toggle,
+.workspace-topbar :is(.workspace-theme, .workspace-support, .workspace-account-menu > summary),
+.workspace-utilities button {
+  display: inline-flex;
+  min-height: 44px;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 12px;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-control-radius);
+  background: var(--ui-surface);
+  color: var(--ui-text);
+  font: 560 .875rem/1.2 var(--ui-font);
+  cursor: pointer;
+}
+.workspace-topbar :is(.workspace-menu-toggle, .workspace-theme, .workspace-support, .workspace-account-menu > summary):hover,
+.workspace-utilities button:hover { background: var(--ui-subtle); border-color: var(--ui-control-border); }
+.workspace-topbar .workspace-menu-toggle, .workspace-topbar .workspace-help-link { display: none; }
+.workspace-topbar :is(.workspace-theme, .workspace-support) { width: 44px; padding-inline: 0; }
+.workspace-theme[aria-pressed="true"] svg { fill: currentColor; }
+.workspace-topbar .workspace-account-menu > summary { list-style: none; }
+.workspace-account-menu > summary::-webkit-details-marker { display: none; }
+.workspace-account-menu[open] > summary { background: var(--ui-selected); }
+.workspace-account-panel {
+  min-width: 235px;
+  max-width: min(310px, calc(100vw - 40px));
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  padding: 14px;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius);
+  background: var(--ui-surface);
+  box-shadow: var(--ui-shadow);
+  overflow-wrap: anywhere;
+}
+.workspace-account-status, .workspace-account-error { margin: 8px 0; font-size: .8125rem; }
+.workspace-account-status { color: var(--ui-muted); }
+.workspace-account-error { color: var(--ui-danger); }
+.workspace-account-action, .workspace-library-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 6px 10px;
+  color: var(--ui-brand);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-control-radius);
+  background: var(--ui-surface);
+  font: 580 .875rem/1.3 var(--ui-font);
+  text-decoration: none;
+  cursor: pointer;
+}
+.workspace-account-action:hover, .workspace-library-link:hover { background: var(--ui-brand-soft); }
+.workspace-utilities {
+  display: flex;
+  justify-content: end;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-block-start: 28px;
+  padding-block-start: 16px;
+  border-top: 1px solid var(--ui-border);
+}
+.workspace-shell :is(.workspace, .builder-workspace, .calculator-workspace, .calculator-menu) {
+  border-radius: var(--ui-radius);
+  border-color: var(--ui-border);
+  box-shadow: none;
+}
+.workspace-shell :is(.workspace, .builder-workspace) { overflow: visible; }
+.workspace-shell .workspace {
+  grid-template-columns: minmax(252px, .38fr) minmax(0, 1fr);
+  min-height: 0;
+  gap: 18px;
+  border: 0;
+  background: transparent;
+}
+.workspace-shell :is(.library, .viewer-panel, .editor-panel, .preview-panel, .calculator-workspace, .calculator-menu) {
+  min-width: 0;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius);
+  background: var(--ui-surface);
+}
+.workspace-shell .library { padding: 20px; }
+.workspace-shell .section-heading { padding: 0 0 16px; }
+.workspace-shell .molecule-search { margin: 0 0 12px; }
+.workspace-shell .molecule-results summary { color: var(--ui-brand); cursor: pointer; font-size: .875rem; font-weight: 630; }
+.workspace-shell .molecule-list-hint { display: none; }
+.workspace-shell .molecule-card { padding: 10px; border-radius: 8px; }
+.workspace-shell .molecule-card.is-active { background: var(--ui-brand-soft); border-color: var(--ui-brand); }
+.workspace-shell .molecule-card__formula, .workspace-shell .viewer-toolbar .formula {
+  font-family: var(--ui-data-font);
+  font-variant-numeric: tabular-nums;
+}
+.workspace-shell .viewer-toolbar .formula { flex: 0 1 auto; font-size: clamp(1.35rem, 3vw, 2.2rem); }
+.workspace-shell .viewer-toolbar > div:first-child { flex-basis: 180px; }
+.workspace-shell .viewer-toolbar h2 { font-size: 1.65rem; }
+.workspace-shell .viewer-category { margin: 4px 0 0; color: var(--ui-muted); font-size: .875rem; }
+.workspace-shell .viewer-status.is-error { color: var(--ui-danger); background: var(--ui-danger-bg); }
+.workspace-shell .viewer-panel :is(.structure-provenance, .ionic-notice) { margin-bottom: 10px; }
+.workspace-shell .viewer-panel > .copy-result { margin: 4px 30px 14px; }
+.workspace-shell #explorer-measurements { margin-inline: 30px; }
+.workspace-shell .builder-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 18px;
+  border: 0;
+  background: transparent;
+}
+.workspace-shell :is(.editor-panel, .preview-panel) { padding: 20px; }
+.workspace-shell .editor-panel .panel-heading { margin-bottom: 12px; }
+.workspace-shell .editor-actions { margin: 0 0 8px; align-items: center; flex-wrap: wrap; gap: 8px 12px; }
+.workspace-shell .editor-actions p { flex-basis: 100%; margin: 0; }
+.builder-preview-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--ui-brand);
+  font-size: .875rem;
+  text-underline-offset: 3px;
+}
+.workspace-shell .builder-load { border-block-start: 1px solid var(--ui-border); }
+.workspace-shell .builder-load summary { color: var(--ui-brand); cursor: pointer; font-weight: 620; font-size: .875rem; }
+.workspace-shell .builder-molecule-search { margin-bottom: 12px; }
+.workspace-shell .builder-viewer { height: clamp(320px, 38vw, 475px); }
+.workspace-shell .personal-library { margin-top: 16px; scroll-margin-top: 20px; }
+.workspace-shell .builder-facts strong:not(.is-valid):not(.is-invalid) { color: var(--ui-text); }
+.workspace-shell :is(.ketcher-frame, .builder-viewer, .viewer-stage) { border-color: var(--ui-border); }
+.workspace-shell .viewer-panel > .viewer-controls { margin-inline: 30px; }
+.workspace-shell .calculator-intro { padding: 32px 0 8px; }
+.workspace-shell .calculator-intro h1 { margin-bottom: 12px; }
+.workspace-shell .calculator-layout { grid-template-columns: 224px minmax(0, 1fr); gap: 18px; }
+.workspace-shell .calculator-menu { padding: 8px; }
+.workspace-shell .calculator-workspace { padding: 24px; }
+.workspace-shell .calculator-heading h2 { margin: 0 0 8px; font-size: clamp(1.45rem, 2.7vw, 2.1rem); }
+.calculator-model { margin: 8px 0 0; color: var(--ui-muted); font-size: .8125rem; }
+.workspace-shell .calculator-context { background: var(--ui-subtle); }
+.workspace-shell .calculator-topic-group .calculator-choice { border-radius: 0; }
+.workspace-shell .calculator-topic-group .calculator-choice:focus-visible { outline-offset: -4px; }
+.workspace-shell .calc-result { overflow-wrap: anywhere; }
+@media (max-width: 1040px) {
+  .workspace-topbar-inner { grid-template-columns: minmax(0, 1fr) auto auto auto; gap: 8px; min-height: 63px; }
+  .workspace-topbar .workspace-menu-toggle { display: inline-flex; }
+  .workspace-topbar .workspace-menu { display: grid; position: absolute; inset: calc(100% + 1px) var(--shell-gutter) auto; max-width: 465px; margin-inline: auto; gap: 4px; padding: 10px; background: var(--ui-surface); border: 1px solid var(--ui-border); border-radius: 0 0 var(--ui-radius) var(--ui-radius); box-shadow: var(--ui-shadow); }
+  .workspace-menu-toggle[aria-expanded="false"] + .workspace-menu { display: none; }
+  .workspace-topbar .workspace-nav { display: grid; gap: 4px; justify-content: stretch; }
+  .workspace-topbar .workspace-nav a { justify-content: start; }
+  .workspace-topbar .workspace-nav a .workspace-icon { display: block; width: 17px; height: 17px; }
+  .workspace-topbar .workspace-account-menu { justify-self: stretch; }
+  .workspace-topbar .workspace-account-menu > summary { display: flex; justify-content: start; border-color: transparent; }
+  .workspace-account-panel { position: static; margin-top: 4px; min-width: 0; max-width: none; border-radius: 8px; box-shadow: none; }
+  .workspace-topbar .workspace-help-link { display: flex; align-items: center; min-height: 44px; padding: 8px 12px; color: var(--ui-brand); font-size: .875rem; text-decoration: none; }
+}
+@media (max-width: 920px) {
+  .workspace-shell .builder-workspace { grid-template-columns: minmax(0, 1fr); }
+  .workspace-shell .calculator-layout { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .workspace-shell .calculator-menu { position: static; }
+  .workspace-shell :is(#calculator-topics, .menu-note) { display: none; }
+  .workspace-shell .mobile-topic-label { display: block; margin: 0 0 6px; font-size: .875rem; font-weight: 620; }
+  .workspace-shell #calculator-topic { display: block; width: 100%; min-height: 44px; padding: 8px 10px; border: 1px solid var(--ui-control-border); color: var(--ui-text); background: var(--ui-surface); font: inherit; }
+}
+@media (max-width: 720px) {
+  body .workspace-shell { --shell-gutter: 16px; padding-bottom: 24px; }
+  .workspace-brand { font-size: .975rem; gap: 6px; }
+  .workspace-brand .workspace-icon { width: 19px; height: 19px; }
+  .workspace-shell > :is(.hero, .builder-header, .lab-header) { flex-wrap: wrap; gap: 12px; padding: 24px 0 16px; }
+  .workspace-shell .workspace { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .workspace-shell .library { padding: 14px; }
+  .workspace-shell .section-heading { padding-bottom: 10px; }
+  .workspace-shell .molecule-search { margin-bottom: 8px; }
+  .workspace-shell .molecule-list { max-height: 112px; padding: 4px; }
+  .workspace-shell .molecule-list-hint { display: block; font-size: .75rem; color: var(--ui-muted); margin: 0 0 4px; }
+  .workspace-shell .viewer-panel > .copy-result { margin-inline: 14px; }
+  .workspace-shell :is(.viewer-toolbar, .details) { padding: 14px; }
+  .workspace-shell :is(.viewer-stage, .viewer-panel > .viewer-controls, .structure-provenance, .ionic-notice, #explorer-measurements) { margin-inline: 14px; }
+  .workspace-shell .viewer-stage { min-height: 0; height: clamp(250px, 76vw, 420px); }
+  .workspace-shell :is(.editor-panel, .preview-panel) { padding: 14px; }
+  .workspace-shell .editor-panel .panel-heading { gap: 8px; }
+  .workspace-shell .editor-actions { flex-direction: row; align-items: center; }
+  .workspace-shell .calculator-intro { padding-top: 24px; }
+  .workspace-shell .calculator-workspace { padding: 16px 12px; }
+  .workspace-utilities { justify-content: start; }
+}
+@media (max-width: 415px) {
+  .workspace-topbar .workspace-brand { font-size: .9rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .workspace-shell :where(*):not(:where(.ketcher-frame *)) { scroll-behavior: auto; }
+}
