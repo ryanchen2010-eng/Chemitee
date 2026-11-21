@@ -14,6 +14,7 @@ export function mountSupportAssistant(trigger: HTMLButtonElement) {
   dialog.innerHTML = `<form class="support-form" novalidate>
     <div class="support-heading"><h2 id="support-title">Support assistant</h2><button type="button" class="support-close">Close</button></div>
     <p class="support-availability" role="status">Checking availability…</p>
+    <p>Messages go to OpenAI. The assistant generates an image only when you ask for one.</p>
     <label for="support-question">Message</label><textarea id="support-question" rows="3" maxlength="1000" aria-describedby="support-error" placeholder="Ask a question or request an image" required></textarea>
     <button type="submit" class="support-submit" disabled>Ask assistant</button>
     <p id="support-error" class="support-error" role="alert" tabindex="-1"></p>

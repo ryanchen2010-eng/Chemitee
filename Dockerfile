@@ -9,7 +9,7 @@ COPY tsconfig.json vite.config.ts index.html explore.html builder.html reaction-
 COPY src ./src
 COPY public ./public
 COPY scripts/compress-dist.mjs ./scripts/compress-dist.mjs
-RUN CAPSTONE_PRIVATE_BETA_BUILD=1 pnpm build && node scripts/compress-dist.mjs
+RUN CAPSTONE_PRIVATE_BETA_BUILD=1 CAPSTONE_HOSTED_WORKSPACE_BUILD=1 pnpm build && node scripts/compress-dist.mjs
 
 FROM python:3.12-slim-bookworm AS trial
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PORT=10000 \

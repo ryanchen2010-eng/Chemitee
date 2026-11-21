@@ -37,10 +37,10 @@ class SupportError(Exception):
         self.status = status
 
 
-def call_openai(key, payload):
+def call_openai(key, payload, *, image_timeout=150):
     request = Request('https://api.openai.com/v1/responses', data=json.dumps(payload).encode(), headers={'Authorization': f'Bearer {key}', 'Content-Type':'application/json'}, method='POST')
     # No automatic retries: retries can cause additional billable requests.
-    with urlopen(request, timeout=150 if payload.get('tools') else 20) as response:
+    with urlopen(request, timeout=image_timeout if payload.get('tools') else 20) as response:
         data = response.read(8000001)
     if len(data) > 8000000:
         raise ValueError('Oversized provider response')
@@ -48,12 +48,13 @@ def call_openai(key, payload):
 
 
 class SupportAssistant:
-    def __init__(self, env=None, transport=call_openai, clock=time.monotonic):
+    def __init__(self, env=None, transport=call_openai, clock=time.monotonic, *, reserve=None):
         env = os.environ if env is None else env
         self.key = env.get('OPENAI_API_KEY', '')
         self.model = env.get('CAPSTONE_SUPPORT_AI_MODEL', '')
         self.enabled = env.get('CAPSTONE_SUPPORT_AI_ENABLED') == '1' and bool(self.key) and bool(re.fullmatch(r'[A-Za-z0-9._:-]{1,100}', self.model))
         self.transport, self.clock = transport, clock
+        self.reserve = reserve
         self.events, self.lock = deque(), threading.Lock()
         self.job = threading.BoundedSemaphore(1)
 
@@ -94,6 +95,13 @@ class SupportAssistant:
             if mode == 'image':
                 payload['tool_choice'] = {'type':'image_generation'}
                 payload['max_tool_calls'] = 1
+            if self.reserve is not None:
+                try:
+                    admitted = self.reserve(mode)
+                except Exception:
+                    raise SupportError('The assistant usage budget is temporarily unavailable. No request was sent.') from None
+                if not admitted:
+                    raise SupportError('This request would exceed the assistant’s monthly usage limit.', 429)
             try:
                 response = self.transport(self.key,payload)
                 if response.get('status') != 'completed':

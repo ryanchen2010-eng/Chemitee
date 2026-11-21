@@ -21,6 +21,7 @@ import time
 from collections import deque
 from collections.abc import Callable, Mapping
 from datetime import timedelta
+from functools import partial
 from pathlib import Path, PurePosixPath
 from typing import Any
 from urllib.parse import urlsplit
@@ -166,6 +167,20 @@ def create_app(config: Mapping[str, Any] | None = None, *, chemistry_backend: An
     if len(set(secret)) < 16:
         raise ValueError("CAPSTONE_SESSION_SECRET must be generated from random bytes, not a repeated pattern.")
     public_origin = _https_origin(settings.get("PUBLIC_ORIGIN"), "CAPSTONE_PUBLIC_ORIGIN")
+    workspace = None
+    workspace_body_limit = MAX_BODY_BYTES
+    if os.environ.get("CAPSTONE_WORKSPACE_MODE") == "hosted":
+        from .hosted_workspace import MAX_WORKSPACE_BODY, create_app as create_workspace
+        workspace = create_workspace({"ORIGIN": public_origin})
+        workspace_body_limit = MAX_WORKSPACE_BODY
+
+    from .support_assistant import SupportAssistant, SupportError, call_openai
+    assistant = SupportAssistant(env={})
+    if workspace is not None and os.environ.get("CAPSTONE_SUPPORT_AI_MODEL") == "gpt-6-luna":
+        assistant = SupportAssistant(
+            transport=partial(call_openai, image_timeout=70),
+            reserve=workspace.extensions["workspace_store"].reserve_support,
+        )
     raw_frames = settings.get("FRAME_ANCESTORS")
     if isinstance(raw_frames, str):
         raw_frames = raw_frames.split()
@@ -231,7 +246,8 @@ def create_app(config: Mapping[str, Any] | None = None, *, chemistry_backend: An
                 # Empty logout is allowed because it has no submitted data.
                 if request.path != "/logout":
                     return json_error("The request is empty or has no declared size.", 422)
-            if request.content_length is not None and request.content_length > MAX_BODY_BYTES:
+            body_limit = workspace_body_limit if request.path == "/api/account/library" else MAX_BODY_BYTES
+            if request.content_length is not None and request.content_length > body_limit:
                 return json_error("The request is too large.", 413)
         # TRUSTED_HOSTS failures are routing exceptions; do not turn them into
         # a login redirect or health success from this callback. Origin/size
@@ -247,7 +263,10 @@ def create_app(config: Mapping[str, Any] | None = None, *, chemistry_backend: An
         if request.path.startswith("/api/"):
             if not limiter.allow("api", request.remote_addr or "unknown"):
                 return json_error("Too many chemistry requests. Try again in a minute.", 429, 60)
-            if not signed_in():
+            # A return from Google may omit the trial's partitioned cookie.
+            # The workspace still requires browser-bound, single-use state.
+            callback = workspace is not None and request.method == "GET" and request.path == "/api/account/callback"
+            if not signed_in() and not callback:
                 return json_error("Sign in to this private trial first.", 401)
         elif not signed_in():
             return redirect("/login?next=" + safe_return(request.path), code=303)
@@ -327,9 +346,13 @@ def create_app(config: Mapping[str, Any] | None = None, *, chemistry_backend: An
         finally:
             jobs.release()
 
-    @app.get('/api/account/session')
-    def account_not_configured() -> Any:
-        return jsonify(configured=False, authenticated=False)
+    @app.route('/api/account/<operation>', methods=['GET', 'POST'])
+    def account(operation: str) -> Response:
+        if workspace is not None:
+            return Response.from_app(workspace, request.environ)
+        if operation == 'session' and request.method in {'GET', 'HEAD'}:
+            return jsonify(configured=False, authenticated=False)
+        return json_error('Google sign-in is not configured for this deployment.', 404)
 
     @app.post('/api/feedback')
     def feedback_not_configured() -> Any:
@@ -338,12 +361,10 @@ def create_app(config: Mapping[str, Any] | None = None, *, chemistry_backend: An
 
     @app.get('/api/support/status')
     def support_status() -> Any:
-        from .support_assistant import assistant
         return jsonify(assistant.status())
 
     @app.post('/api/support/ask')
     def support_ask() -> Any:
-        from .support_assistant import assistant, SupportError
         if request.mimetype != 'application/json' or request.headers.get('X-Support-Request') != '1':
             return json_error('Expected a support panel request.',415)
         if request.content_length is None or request.content_length > 32000:

@@ -1,5 +1,25 @@
 /** Account access is optional and separate from the shared beta password. */
 type AccountStatus = { configured: boolean; authenticated: boolean; workspace?: 'hosted'; context?: string; user?: { name?: string; email?: string } };
+const HOSTED_CONTEXT_KEY = 'molecule-playground.account-context.v1';
+
+function clearStaleDrafts(context: string): boolean {
+  try {
+    const previous = sessionStorage.getItem(HOSTED_CONTEXT_KEY);
+    if (previous === context) return false;
+    sessionStorage.setItem(HOSTED_CONTEXT_KEY, context);
+    if (previous === null) return false;
+    for (let index = sessionStorage.length - 1; index >= 0; index--) {
+      const key = sessionStorage.key(index);
+      if (key?.startsWith('molecule-playground.') && key !== HOSTED_CONTEXT_KEY
+          && key !== 'molecule-playground.builder-draft.v1') {
+        sessionStorage.removeItem(key);
+      }
+    }
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 function notifyHostedTabs(): void {
   if (typeof BroadcastChannel === 'undefined') return;
@@ -57,9 +77,42 @@ export function mountAccount(host: HTMLElement): void {
     signIn.hidden = true; signOut.hidden = true;
     status.textContent = 'Account service unavailable. You can still use the tools as a guest.';
   };
-  void fetch('/api/account/session', { credentials: 'same-origin', cache: 'no-store' })
-    .then(response => { if (!response.ok) throw new Error('Account unavailable'); return response.json() as Promise<AccountStatus>; })
-    .then(result => { render(result); if (result.workspace === 'hosted') notifyHostedTabs(); }).catch(unavailable);
+  let connected = false;
+  let revision = 0;
+  const apply = (result: AccountStatus) => {
+    if (result.workspace === 'hosted' && clearStaleDrafts(result.context ?? 'guest')) {
+      window.location.reload();
+      return;
+    }
+    render(result);
+  };
+  const readAccount = async () => {
+    const current = ++revision;
+    try {
+      const response = await fetch('/api/account/session', { credentials: 'same-origin', cache: 'no-store' });
+      if (!response.ok) throw new Error('Account unavailable');
+      const result = await response.json() as AccountStatus;
+      if (current !== revision) return;
+      if (result.workspace === 'hosted' && !connected) {
+        connected = true;
+        if (typeof BroadcastChannel !== 'undefined') {
+          const channel = new BroadcastChannel('molecule-playground-workspace');
+          channel.addEventListener('message', () => { void readAccount(); });
+        }
+        document.addEventListener('visibilitychange', () => {
+          if (!document.hidden) void readAccount();
+        });
+        window.addEventListener('pageshow', event => {
+          if (event.persisted) void readAccount();
+        });
+        notifyHostedTabs();
+      }
+      apply(result);
+    } catch {
+      if (current === revision) unavailable();
+    }
+  };
+  void readAccount();
   signOut.addEventListener('click', async () => {
     signOut.disabled = true;
     try {
@@ -68,8 +121,10 @@ export function mountAccount(host: HTMLElement): void {
       const response = await fetch('/api/account/logout', { method: 'POST', credentials: 'same-origin', headers, body: '{}' });
       if (response.status === 409 && account?.workspace === 'hosted') { window.location.reload(); return; }
       if (!response.ok) throw new Error('Sign out failed');
-      if (account?.workspace === 'hosted') notifyHostedTabs();
-      render({ configured: true, authenticated: false });
+      revision++;
+      const workspace = account?.workspace;
+      if (workspace === 'hosted') notifyHostedTabs();
+      apply({ configured: true, authenticated: false, workspace });
       window.dispatchEvent(new Event('account-changed'));
     } catch {
       status.textContent = 'Could not sign out. Please try again.';

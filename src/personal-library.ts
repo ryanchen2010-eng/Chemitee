@@ -19,7 +19,7 @@ export function mountPersonalLibrary(host: HTMLElement, editor: { save: () => Pr
   context: Promise<string | null>;
   reset: () => void;
 }): void {
-  if (__CAPSTONE_PRIVATE_BETA__) {
+  if (__CAPSTONE_PRIVATE_BETA__ && !hosted) {
     host.innerHTML = `<h2>My molecules</h2><p class="library-status">Account-linked saves are disabled in Beta V3. Export a drawing to keep a copy.</p>`;
     return;
   }
